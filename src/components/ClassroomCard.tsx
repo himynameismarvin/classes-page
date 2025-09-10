@@ -1,7 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog, faUsers, faUserTie, faLink, faUserPlus, faSync } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faUsers, faUserTie, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { faEdit, faFileArchive, faTrashCan, faAddressCard, faEnvelope } from '@fortawesome/free-regular-svg-icons'
 import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
 
 interface ClassroomCardProps {
   grade: string;
@@ -56,13 +57,26 @@ export default function ClassroomCard({
           </div>
           {ssoProvider && (
             <div 
-              className="text-gray-500"
+              className="flex items-center justify-center w-5 h-5 rounded-sm"
               title={`Synced with ${ssoProvider === 'google' ? 'Google Classroom' : 'Clever'}`}
             >
-              <FontAwesomeIcon 
-                icon={ssoProvider === 'google' ? faSync : faLink} 
-                className="w-4 h-4"
-              />
+              {ssoProvider === 'google' ? (
+                <Image
+                  src="/images/Google_Classroom_Logo.svg.png"
+                  alt="Google Classroom"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 rounded-sm"
+                />
+              ) : (
+                <Image
+                  src="/images/Mark-Blue copy.png"
+                  alt="Clever"
+                  width={20}
+                  height={20}
+                  className="w-5 h-5 rounded-sm"
+                />
+              )}
             </div>
           )}
         </div>

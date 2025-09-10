@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChalkboardUser, faBoxArchive } from '@fortawesome/free-solid-svg-icons';
+import Image from 'next/image';
 
 export default function LeftNavigation() {
   const [helpExpanded, setHelpExpanded] = useState(false);
@@ -13,10 +14,13 @@ export default function LeftNavigation() {
       {/* Logo */}
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">P</span>
-          </div>
-          <span className="text-xl font-bold text-gray-900">Prodigy</span>
+          <Image
+            src="/images/prodigy-orange-logo-text.webp"
+            alt="Prodigy"
+            width={120}
+            height={32}
+            className="h-8 w-auto"
+          />
         </div>
       </div>
 
