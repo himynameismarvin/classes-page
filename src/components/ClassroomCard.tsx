@@ -35,9 +35,11 @@ export default function ClassroomCard({
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
+  const infoIconRef = useRef<HTMLDivElement>(null);
   const isMenuOpen = openMenuId === cardId;
   const [showTooltip, setShowTooltip] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -64,6 +66,17 @@ export default function ClassroomCard({
       });
     }
     onMenuToggle?.(cardId);
+  };
+
+  const handleTooltipShow = () => {
+    if (infoIconRef.current) {
+      const rect = infoIconRef.current.getBoundingClientRect();
+      setTooltipPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 8
+      });
+    }
+    setShowTooltip(true);
   };
 
   return (
@@ -158,18 +171,12 @@ export default function ClassroomCard({
         <div className="bg-gray-100 px-4 py-2 flex items-center justify-center space-x-2 text-gray-600 -mt-2 relative rounded-b-lg">
           <span className="text-sm">You are a co-teacher</span>
           <div 
+            ref={infoIconRef}
             className="relative"
-            onMouseEnter={() => setShowTooltip(true)}
+            onMouseEnter={handleTooltipShow}
             onMouseLeave={() => setShowTooltip(false)}
           >
             <FontAwesomeIcon icon={faInfoCircle} className="w-4 h-4 text-gray-400 cursor-help" />
-            {showTooltip && (
-              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-white text-gray-700 text-sm rounded-lg shadow-lg border border-gray-200 whitespace-nowrap z-20">
-                Co-teachers have the same control over content but cannot delete classrooms
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-200"></div>
-              </div>
-            )}
           </div>
         </div>
       )}
@@ -214,6 +221,23 @@ export default function ClassroomCard({
               <span>Manage co-teachers</span>
             </button>
           </div>
+        </div>,
+        document.body
+      )}
+      
+      {/* Portal Tooltip */}
+      {showTooltip && typeof window !== 'undefined' && createPortal(
+        <div 
+          className="fixed px-3 py-2 bg-white text-gray-700 text-sm rounded-lg shadow-lg border border-gray-200 whitespace-nowrap z-50 transform -translate-x-1/2"
+          style={{
+            left: tooltipPosition.x,
+            top: tooltipPosition.y,
+            transform: 'translateX(-50%) translateY(-100%)'
+          }}
+        >
+          Co-teachers have the same control over content but cannot delete classrooms
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-200"></div>
         </div>,
         document.body
       )}
