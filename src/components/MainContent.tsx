@@ -149,7 +149,7 @@ export default function MainContent() {
                   SY {schoolYear}
                 </h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                 {classrooms.map((classroom) => (
                   <ClassroomCard
                     key={classroom.id}
@@ -179,7 +179,7 @@ export default function MainContent() {
                   {grade}
                 </h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                 {classrooms.map((classroom) => (
                   <ClassroomCard
                     key={classroom.id}
@@ -200,7 +200,7 @@ export default function MainContent() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
           {sortedClassrooms.map((classroom) => (
             <ClassroomCard
               key={classroom.id}

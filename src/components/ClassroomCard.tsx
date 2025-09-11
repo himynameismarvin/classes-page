@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faUserTie, faUserPlus, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faUserTie, faUserPlus, faUsers, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { faEdit, faTrashCan, faEnvelope, faFolderOpen, faUser, faAddressCard } from '@fortawesome/free-regular-svg-icons';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
@@ -30,7 +30,9 @@ export default function ClassroomCard({
   schoolYear
 }: ClassroomCardProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
   const isMenuOpen = openMenuId === cardId;
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -49,9 +51,10 @@ export default function ClassroomCard({
   }, [isMenuOpen, cardId, onMenuToggle]);
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow max-w-sm">
-      {/* Header with grade, year, SSO icon and settings */}
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow max-w-sm flex flex-col relative">
+      <div className="p-6 flex-1 overflow-hidden rounded-t-lg">
+        {/* Header with grade, year, SSO icon and settings */}
+        <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
           <div className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium">
             {grade}
@@ -159,10 +162,32 @@ export default function ClassroomCard({
         Class code: <span className="font-mono font-medium">{classCode}</span>
       </p>
 
-      {/* Enter Class Button */}
-      <button className="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium py-3 px-4 rounded-lg transition-colors">
-        Enter class
-      </button>
+        {/* Enter Class Button */}
+        <button className="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium py-3 px-4 rounded-lg transition-colors">
+          Enter class
+        </button>
+      </div>
+
+      {/* Co-teacher Indicator */}
+      {hasCoTeacher && (
+        <div className="bg-gray-100 px-4 py-2 flex items-center justify-center space-x-2 text-gray-600 -mt-2 relative rounded-b-lg">
+          <span className="text-sm">Co-teacher</span>
+          <div 
+            className="relative"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            <FontAwesomeIcon icon={faInfoCircle} className="w-4 h-4 text-gray-400 cursor-help" />
+            {showTooltip && (
+              <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-white text-gray-700 text-sm rounded-lg shadow-lg border border-gray-200 whitespace-nowrap z-20">
+                Co-teachers have the same control over content but cannot delete classrooms
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-200"></div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

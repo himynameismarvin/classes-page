@@ -36,7 +36,7 @@ export const classrooms: Classroom[] = [
     name: "Period 2 - MATH - WHITEHURST",
     studentCount: 0,
     classCode: "X32QM9K",
-    hasCoTeacher: false,
+    hasCoTeacher: true,
     schoolYear: '2023-24'
   },
   {
@@ -65,7 +65,7 @@ export const classrooms: Classroom[] = [
     name: "PERIOD 3 - MATH - WHITEHURST",
     studentCount: 11,
     classCode: "X32QM9K",
-    hasCoTeacher: true,
+    hasCoTeacher: false,
     schoolYear: '2024-25'
   }
 ];
