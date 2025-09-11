@@ -4,18 +4,43 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpDown, faCaretDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 import ClassroomCard from "./ClassroomCard";
-import { classrooms } from "@/data/classrooms";
+import EditClassModal from "./EditClassModal";
+import { classrooms, Classroom } from "@/data/classrooms";
 
 export default function MainContent() {
   const [sortBy, setSortBy] = useState("School year");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [classroomData, setClassroomData] = useState<Classroom[]>(classrooms);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingClassroom, setEditingClassroom] = useState<Classroom | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const sortOptions = ["School year", "Date created", "Grade", "A to Z"];
 
   const handleMenuToggle = (cardId: string) => {
     setOpenMenuId(openMenuId === cardId ? null : cardId);
+  };
+
+  const handleEditClass = (cardId: string) => {
+    const classroom = classroomData.find(c => c.id === cardId);
+    if (classroom) {
+      setEditingClassroom(classroom);
+      setEditModalOpen(true);
+      setOpenMenuId(null);
+    }
+  };
+
+  const handleSaveClass = (updatedData: { name: string; grade: string; schoolYear: string }) => {
+    if (editingClassroom) {
+      setClassroomData(prev => 
+        prev.map(classroom => 
+          classroom.id === editingClassroom.id 
+            ? { ...classroom, ...updatedData }
+            : classroom
+        )
+      );
+    }
   };
 
   useEffect(() => {
@@ -35,7 +60,7 @@ export default function MainContent() {
   }, [isDropdownOpen]);
 
   const sortedClassrooms = useMemo(() => {
-    const sorted = [...classrooms].sort((a, b) => {
+    const sorted = [...classroomData].sort((a, b) => {
       switch (sortBy) {
         case "School year":
           return b.schoolYear.localeCompare(a.schoolYear);
@@ -50,7 +75,7 @@ export default function MainContent() {
       }
     });
     return sorted;
-  }, [sortBy]);
+  }, [sortBy, classroomData]);
 
   const groupedBySchoolYear = useMemo(() => {
     if (sortBy !== "School year") return null;
@@ -163,6 +188,7 @@ export default function MainContent() {
                     schoolYear={classroom.schoolYear}
                     openMenuId={openMenuId}
                     onMenuToggle={handleMenuToggle}
+                    onEditClass={handleEditClass}
                   />
                 ))}
               </div>
@@ -193,6 +219,7 @@ export default function MainContent() {
                     schoolYear={classroom.schoolYear}
                     openMenuId={openMenuId}
                     onMenuToggle={handleMenuToggle}
+                    onEditClass={handleEditClass}
                   />
                 ))}
               </div>
@@ -218,6 +245,18 @@ export default function MainContent() {
           ))}
         </div>
       )}
+
+      {/* Edit Class Modal */}
+      <EditClassModal
+        isOpen={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        onSave={handleSaveClass}
+        initialData={editingClassroom ? {
+          name: editingClassroom.name,
+          grade: editingClassroom.grade,
+          schoolYear: editingClassroom.schoolYear
+        } : { name: '', grade: '', schoolYear: '' }}
+      />
     </div>
   );
 }

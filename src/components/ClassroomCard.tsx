@@ -13,6 +13,7 @@ interface ClassroomCardProps {
   hasCoTeacher?: boolean;
   openMenuId?: string | null;
   onMenuToggle?: (cardId: string) => void;
+  onEditClass?: (cardId: string) => void;
   cardId: string;
   ssoProvider?: 'google' | 'clever';
   schoolYear: string;
@@ -26,6 +27,7 @@ export default function ClassroomCard({
   hasCoTeacher = false,
   openMenuId = null,
   onMenuToggle,
+  onEditClass,
   cardId,
   ssoProvider,
   schoolYear
@@ -154,7 +156,7 @@ export default function ClassroomCard({
       {/* Co-teacher Indicator */}
       {hasCoTeacher && (
         <div className="bg-gray-100 px-4 py-2 flex items-center justify-center space-x-2 text-gray-600 -mt-2 relative rounded-b-lg">
-          <span className="text-sm">Co-teacher</span>
+          <span className="text-sm">You are a co-teacher</span>
           <div 
             className="relative"
             onMouseEnter={() => setShowTooltip(true)}
@@ -183,7 +185,10 @@ export default function ClassroomCard({
           }}
         >
           <div className="py-2">
-            <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
+            <button 
+              onClick={() => onEditClass?.(cardId)}
+              className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left"
+            >
               <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
               <span>Edit class</span>
             </button>
