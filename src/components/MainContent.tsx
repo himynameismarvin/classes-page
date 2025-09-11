@@ -12,7 +12,7 @@ export default function MainContent() {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const sortOptions = ["A - Z", "Z - A", "Recently Created", "School year", "Grade"];
+  const sortOptions = ["School year", "Date created", "Grade", "A to Z"];
 
   const handleMenuToggle = (cardId: string) => {
     setOpenMenuId(openMenuId === cardId ? null : cardId);
@@ -37,16 +37,14 @@ export default function MainContent() {
   const sortedClassrooms = useMemo(() => {
     const sorted = [...classrooms].sort((a, b) => {
       switch (sortBy) {
-        case "A - Z":
-          return a.name.localeCompare(b.name);
-        case "Z - A":
-          return b.name.localeCompare(a.name);
-        case "Recently Created":
-          return parseInt(b.id) - parseInt(a.id);
         case "School year":
           return b.schoolYear.localeCompare(a.schoolYear);
+        case "Date created":
+          return parseInt(b.id) - parseInt(a.id);
         case "Grade":
           return a.grade.localeCompare(b.grade);
+        case "A to Z":
+          return a.name.localeCompare(b.name);
         default:
           return 0;
       }

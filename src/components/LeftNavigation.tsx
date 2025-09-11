@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChalkboardUser, faBoxArchive } from '@fortawesome/free-solid-svg-icons';
+import { faBuilding, faFolderOpen } from '@fortawesome/free-regular-svg-icons';
 import Image from 'next/image';
 
 export default function LeftNavigation() {
@@ -28,12 +28,12 @@ export default function LeftNavigation() {
       <div className="flex-1 py-4">
         <nav className="space-y-1 px-3">
           <div className="flex items-center space-x-3 px-3 py-2 rounded-lg bg-gray-100 text-gray-900">
-            <FontAwesomeIcon icon={faChalkboardUser} className="w-5 h-5" />
+            <FontAwesomeIcon icon={faBuilding} className="w-5 h-5" />
             <span className="font-medium">Active classes</span>
           </div>
           
           <div className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-50">
-            <FontAwesomeIcon icon={faBoxArchive} className="w-5 h-5" />
+            <FontAwesomeIcon icon={faFolderOpen} className="w-5 h-5" />
             <span className="font-medium">Archived classes</span>
           </div>
         </nav>
