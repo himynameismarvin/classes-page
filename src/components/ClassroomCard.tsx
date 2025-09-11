@@ -3,6 +3,7 @@ import { faCog, faUserTie, faUserPlus, faUsers, faInfoCircle } from '@fortawesom
 import { faEdit, faTrashCan, faEnvelope, faFolderOpen, faUser, faAddressCard } from '@fortawesome/free-regular-svg-icons';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { createPortal } from 'react-dom';
 
 interface ClassroomCardProps {
   grade: string;
@@ -30,9 +31,11 @@ export default function ClassroomCard({
   schoolYear
 }: ClassroomCardProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const isMenuOpen = openMenuId === cardId;
   const [showTooltip, setShowTooltip] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -49,6 +52,17 @@ export default function ClassroomCard({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMenuOpen, cardId, onMenuToggle]);
+
+  const handleMenuToggle = () => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setMenuPosition({
+        x: rect.right - 224, // 224px = w-56 (14rem * 16px)
+        y: rect.bottom + 8
+      });
+    }
+    onMenuToggle?.(cardId);
+  };
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow max-w-sm flex flex-col relative">
@@ -89,43 +103,12 @@ export default function ClassroomCard({
         </div>
         <div className="relative" ref={menuRef}>
           <button 
-            onClick={() => onMenuToggle?.(cardId)}
+            ref={buttonRef}
+            onClick={handleMenuToggle}
             className="text-gray-400 hover:text-gray-600 p-1"
           >
             <FontAwesomeIcon icon={faCog} className="w-5 h-5" />
           </button>
-          
-          {isMenuOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-              <div className="py-2">
-                <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
-                  <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
-                  <span>Edit class</span>
-                </button>
-                <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
-                  <FontAwesomeIcon icon={faFolderOpen} className="w-4 h-4" />
-                  <span>Archive class</span>
-                </button>
-                <button className="w-full flex items-center space-x-3 px-4 py-2 text-red-600 hover:bg-red-50 text-left">
-                  <FontAwesomeIcon icon={faTrashCan} className="w-4 h-4" />
-                  <span>Delete class</span>
-                </button>
-                <hr className="my-2" />
-                <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
-                  <FontAwesomeIcon icon={faAddressCard} className="w-4 h-4" />
-                  <span>Manage students</span>
-                </button>
-                <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
-                  <FontAwesomeIcon icon={faEnvelope} className="w-4 h-4" />
-                  <span>Invite parents</span>
-                </button>
-                <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
-                  <FontAwesomeIcon icon={faUser} className="w-4 h-4" />
-                  <span>Manage co-teachers</span>
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
@@ -187,6 +170,47 @@ export default function ClassroomCard({
             )}
           </div>
         </div>
+      )}
+      
+      {/* Portal Menu */}
+      {isMenuOpen && typeof window !== 'undefined' && createPortal(
+        <div 
+          ref={menuRef}
+          className="fixed w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50"
+          style={{
+            left: menuPosition.x,
+            top: menuPosition.y
+          }}
+        >
+          <div className="py-2">
+            <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
+              <FontAwesomeIcon icon={faEdit} className="w-4 h-4" />
+              <span>Edit class</span>
+            </button>
+            <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
+              <FontAwesomeIcon icon={faFolderOpen} className="w-4 h-4" />
+              <span>Archive class</span>
+            </button>
+            <button className="w-full flex items-center space-x-3 px-4 py-2 text-red-600 hover:bg-red-50 text-left">
+              <FontAwesomeIcon icon={faTrashCan} className="w-4 h-4" />
+              <span>Delete class</span>
+            </button>
+            <hr className="my-2" />
+            <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
+              <FontAwesomeIcon icon={faAddressCard} className="w-4 h-4" />
+              <span>Manage students</span>
+            </button>
+            <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
+              <FontAwesomeIcon icon={faEnvelope} className="w-4 h-4" />
+              <span>Invite parents</span>
+            </button>
+            <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
+              <FontAwesomeIcon icon={faUser} className="w-4 h-4" />
+              <span>Manage co-teachers</span>
+            </button>
+          </div>
+        </div>,
+        document.body
       )}
     </div>
   );
