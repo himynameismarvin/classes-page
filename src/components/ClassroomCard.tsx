@@ -1,8 +1,8 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog, faUsers, faUserTie, faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import { faEdit, faFileArchive, faTrashCan, faAddressCard, faEnvelope } from '@fortawesome/free-regular-svg-icons'
-import { useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCog, faUserTie, faUserPlus, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashCan, faEnvelope, faFolderOpen, faUser, faAddressCard } from '@fortawesome/free-regular-svg-icons';
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 interface ClassroomCardProps {
   grade: string;
@@ -47,34 +47,38 @@ export default function ClassroomCard({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isMenuOpen, cardId, onMenuToggle]);
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow max-w-sm">
-      {/* Header with grade badge and settings */}
-      <div className="flex items-start justify-between mb-4">
+      {/* Header with grade, year, SSO icon and settings */}
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-2">
-          <div className="bg-teal-100 text-teal-800 px-3 py-1 rounded-full text-sm font-medium">
+          <div className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium">
             {grade}
+          </div>
+          <div className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium">
+            {schoolYear}
           </div>
           {ssoProvider && (
             <div 
-              className="flex items-center justify-center w-5 h-5 rounded-sm"
+              className="flex items-center justify-center w-6 h-6 rounded-sm"
               title={`Synced with ${ssoProvider === 'google' ? 'Google Classroom' : 'Clever'}`}
             >
               {ssoProvider === 'google' ? (
                 <Image
                   src="/images/Google_Classroom_Logo.svg.png"
                   alt="Google Classroom"
-                  width={20}
-                  height={20}
-                  className="w-5 h-5 rounded-sm"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 rounded-sm"
                 />
               ) : (
                 <Image
                   src="/images/Mark-Blue copy.png"
                   alt="Clever"
-                  width={20}
-                  height={20}
-                  className="w-5 h-5 rounded-sm"
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 rounded-sm"
                 />
               )}
             </div>
@@ -96,7 +100,7 @@ export default function ClassroomCard({
                   <span>Edit class</span>
                 </button>
                 <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
-                  <FontAwesomeIcon icon={faFileArchive} className="w-4 h-4" />
+                  <FontAwesomeIcon icon={faFolderOpen} className="w-4 h-4" />
                   <span>Archive class</span>
                 </button>
                 <button className="w-full flex items-center space-x-3 px-4 py-2 text-red-600 hover:bg-red-50 text-left">
@@ -113,7 +117,7 @@ export default function ClassroomCard({
                   <span>Invite parents</span>
                 </button>
                 <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
-                  <FontAwesomeIcon icon={faUserPlus} className="w-4 h-4" />
+                  <FontAwesomeIcon icon={faUser} className="w-4 h-4" />
                   <span>Manage co-teachers</span>
                 </button>
               </div>
@@ -135,29 +139,24 @@ export default function ClassroomCard({
       {/* Student Count */}
       <div className="flex items-center mb-2">
         <FontAwesomeIcon icon={faUsers} className="w-5 h-5 text-gray-600 mr-2" />
-        <span className="text-gray-700">
+        <span className="text-gray-600">
           {studentCount === 0 ? (
-            <span className="text-red-600 font-medium">0 students</span>
+            <span className="text-red-600">0 students</span>
           ) : (
-            <span className="text-teal-600 font-medium">{studentCount} students</span>
+            <span>{studentCount} students</span>
           )}
         </span>
         {hasCoTeacher && (
           <>
             <FontAwesomeIcon icon={faUserTie} className="w-5 h-5 text-gray-600 ml-4 mr-1" />
-            <span className="text-gray-700">1 co-teacher</span>
+            <span className="text-gray-600">1 co-teacher</span>
           </>
         )}
       </div>
 
       {/* Class Code */}
-      <p className="text-gray-600 mb-2">
-        Class code: <span className="font-mono font-medium">{classCode}</span>
-      </p>
-
-      {/* School Year */}
       <p className="text-gray-600 mb-6">
-        School year: <span className="font-medium">{schoolYear}</span>
+        Class code: <span className="font-mono font-medium">{classCode}</span>
       </p>
 
       {/* Enter Class Button */}
