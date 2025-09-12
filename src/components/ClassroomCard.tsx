@@ -11,6 +11,7 @@ interface ClassroomCardProps {
   studentCount: number;
   classCode: string;
   hasCoTeacher?: boolean;
+  isCoTeacher?: boolean;
   openMenuId?: string | null;
   onMenuToggle?: (cardId: string) => void;
   onEditClass?: (cardId: string) => void;
@@ -25,6 +26,7 @@ export default function ClassroomCard({
   studentCount, 
   classCode, 
   hasCoTeacher = false,
+  isCoTeacher = false,
   openMenuId = null,
   onMenuToggle,
   onEditClass,
@@ -36,10 +38,13 @@ export default function ClassroomCard({
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const infoIconRef = useRef<HTMLDivElement>(null);
+  const ssoIconRef = useRef<HTMLDivElement>(null);
   const isMenuOpen = openMenuId === cardId;
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showSsoTooltip, setShowSsoTooltip] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [ssoTooltipPosition, setSsoTooltipPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -79,6 +84,17 @@ export default function ClassroomCard({
     setShowTooltip(true);
   };
 
+  const handleSsoTooltipShow = () => {
+    if (ssoIconRef.current) {
+      const rect = ssoIconRef.current.getBoundingClientRect();
+      setSsoTooltipPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 8
+      });
+    }
+    setShowSsoTooltip(true);
+  };
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow max-w-sm flex flex-col relative">
       <div className="p-6 flex-1 overflow-hidden rounded-t-lg">
@@ -93,8 +109,10 @@ export default function ClassroomCard({
           </div>
           {ssoProvider && (
             <div 
-              className="flex items-center justify-center w-6 h-6 rounded-sm"
-              title={`Synced with ${ssoProvider === 'google' ? 'Google Classroom' : 'Clever'}`}
+              ref={ssoIconRef}
+              className="flex items-center justify-center w-6 h-6 rounded-sm cursor-help"
+              onMouseEnter={handleSsoTooltipShow}
+              onMouseLeave={() => setShowSsoTooltip(false)}
             >
               {ssoProvider === 'google' ? (
                 <Image
@@ -138,7 +156,7 @@ export default function ClassroomCard({
       </h3>
 
       {/* Student Count */}
-      <div className="flex items-center mb-2">
+      <div className="flex items-center mb-3">
         <FontAwesomeIcon icon={faUsers} className="w-5 h-5 text-gray-600 mr-2" />
         <span className="text-gray-600">
           {studentCount === 0 ? (
@@ -155,11 +173,6 @@ export default function ClassroomCard({
         )}
       </div>
 
-      {/* Class Code */}
-      <p className="text-gray-600 mb-6">
-        Class code: <span className="font-mono font-medium">{classCode}</span>
-      </p>
-
         {/* Enter Class Button */}
         <button className="w-full bg-teal-700 hover:bg-teal-800 text-white font-medium py-3 px-4 rounded-lg transition-colors">
           Enter class
@@ -167,7 +180,7 @@ export default function ClassroomCard({
       </div>
 
       {/* Co-teacher Indicator */}
-      {hasCoTeacher && (
+      {isCoTeacher && (
         <div className="bg-gray-100 px-4 py-2 flex items-center justify-center space-x-2 text-gray-600 -mt-2 relative rounded-b-lg">
           <span className="text-sm">You are a co-teacher</span>
           <div 
@@ -236,6 +249,23 @@ export default function ClassroomCard({
           }}
         >
           Co-teachers have the same control over content but cannot delete classrooms
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-200"></div>
+        </div>,
+        document.body
+      )}
+      
+      {/* SSO Tooltip */}
+      {showSsoTooltip && ssoProvider && typeof window !== 'undefined' && createPortal(
+        <div 
+          className="fixed px-3 py-2 bg-white text-gray-700 text-sm rounded-lg shadow-lg border border-gray-200 whitespace-nowrap z-50 transform -translate-x-1/2"
+          style={{
+            left: ssoTooltipPosition.x,
+            top: ssoTooltipPosition.y,
+            transform: 'translateX(-50%) translateY(-100%)'
+          }}
+        >
+          This class was imported from {ssoProvider === 'google' ? 'Google Classroom' : 'Clever'}
           <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
           <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-200"></div>
         </div>,

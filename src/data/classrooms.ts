@@ -5,6 +5,7 @@ export interface Classroom {
   studentCount: number;
   classCode: string;
   hasCoTeacher?: boolean;
+  isCoTeacher?: boolean;
   ssoProvider?: 'google' | 'clever';
   schoolYear: string;
 }
@@ -17,6 +18,7 @@ export const classrooms: Classroom[] = [
     studentCount: 11,
     classCode: "X32QM9K",
     hasCoTeacher: false,
+    isCoTeacher: false,
     ssoProvider: 'google',
     schoolYear: '2024-25'
   },
@@ -26,7 +28,8 @@ export const classrooms: Classroom[] = [
     name: "Homeroom (11A)",
     studentCount: 11,
     classCode: "X32QM9K",
-    hasCoTeacher: false,
+    hasCoTeacher: true,
+    isCoTeacher: false,
     ssoProvider: 'clever',
     schoolYear: '2024-25'
   },
@@ -36,7 +39,8 @@ export const classrooms: Classroom[] = [
     name: "Period 2 - MATH - WHITEHURST",
     studentCount: 0,
     classCode: "X32QM9K",
-    hasCoTeacher: true,
+    hasCoTeacher: false,
+    isCoTeacher: true,
     schoolYear: '2023-24'
   },
   {
@@ -46,6 +50,7 @@ export const classrooms: Classroom[] = [
     studentCount: 0,
     classCode: "X32QM9K",
     hasCoTeacher: false,
+    isCoTeacher: false,
     ssoProvider: 'google',
     schoolYear: '2023-24'
   },
@@ -56,6 +61,7 @@ export const classrooms: Classroom[] = [
     studentCount: 11,
     classCode: "X32QM9K",
     hasCoTeacher: true,
+    isCoTeacher: false,
     ssoProvider: 'clever',
     schoolYear: '2024-25'
   },
@@ -66,6 +72,7 @@ export const classrooms: Classroom[] = [
     studentCount: 11,
     classCode: "X32QM9K",
     hasCoTeacher: false,
+    isCoTeacher: false,
     schoolYear: '2024-25'
   }
 ];

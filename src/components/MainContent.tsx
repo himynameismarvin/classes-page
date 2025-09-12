@@ -184,6 +184,7 @@ export default function MainContent() {
                     studentCount={classroom.studentCount}
                     classCode={classroom.classCode}
                     hasCoTeacher={classroom.hasCoTeacher}
+                    isCoTeacher={classroom.isCoTeacher}
                     ssoProvider={classroom.ssoProvider}
                     schoolYear={classroom.schoolYear}
                     openMenuId={openMenuId}
@@ -215,6 +216,7 @@ export default function MainContent() {
                     studentCount={classroom.studentCount}
                     classCode={classroom.classCode}
                     hasCoTeacher={classroom.hasCoTeacher}
+                    isCoTeacher={classroom.isCoTeacher}
                     ssoProvider={classroom.ssoProvider}
                     schoolYear={classroom.schoolYear}
                     openMenuId={openMenuId}
@@ -237,10 +239,12 @@ export default function MainContent() {
               studentCount={classroom.studentCount}
               classCode={classroom.classCode}
               hasCoTeacher={classroom.hasCoTeacher}
+              isCoTeacher={classroom.isCoTeacher}
               ssoProvider={classroom.ssoProvider}
               schoolYear={classroom.schoolYear}
               openMenuId={openMenuId}
               onMenuToggle={handleMenuToggle}
+              onEditClass={handleEditClass}
             />
           ))}
         </div>
