@@ -16,7 +16,7 @@ export default function MainContent() {
   const [editingClassroom, setEditingClassroom] = useState<Classroom | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const sortOptions = ["School year", "Date created", "Grade", "A to Z"];
+  const sortOptions = ["School year", "Date created", "Grade", "Platform", "A to Z"];
 
   const handleMenuToggle = (cardId: string) => {
     setOpenMenuId(openMenuId === cardId ? null : cardId);
@@ -68,6 +68,13 @@ export default function MainContent() {
           return parseInt(b.id) - parseInt(a.id);
         case "Grade":
           return a.grade.localeCompare(b.grade);
+        case "Platform":
+          const getPlatformPriority = (ssoProvider?: string) => {
+            if (ssoProvider === "clever") return 1;
+            if (ssoProvider === "google") return 2;
+            return 3;
+          };
+          return getPlatformPriority(a.ssoProvider) - getPlatformPriority(b.ssoProvider);
         case "A to Z":
           return a.name.localeCompare(b.name);
         default:
@@ -114,6 +121,32 @@ export default function MainContent() {
       .map(grade => ({
         grade,
         classrooms: groups[grade].sort((a, b) => a.name.localeCompare(b.name))
+      }));
+    
+    return sortedGroups;
+  }, [sortedClassrooms, sortBy]);
+
+  const groupedByPlatform = useMemo(() => {
+    if (sortBy !== "Platform") return null;
+    
+    const groups: { [key: string]: typeof classrooms } = {};
+    sortedClassrooms.forEach(classroom => {
+      const platform = classroom.ssoProvider === "clever" ? "Clever" :
+                      classroom.ssoProvider === "google" ? "Google Classroom" :
+                      "Prodigy";
+      
+      if (!groups[platform]) {
+        groups[platform] = [];
+      }
+      groups[platform].push(classroom);
+    });
+    
+    const platformOrder = ["Clever", "Google Classroom", "Prodigy"];
+    const sortedGroups = platformOrder
+      .filter(platform => groups[platform])
+      .map(platform => ({
+        platform,
+        classrooms: groups[platform].sort((a, b) => a.name.localeCompare(b.name))
       }));
     
     return sortedGroups;
@@ -203,7 +236,39 @@ export default function MainContent() {
               {groupIndex > 0 && <div className="border-t border-gray-200 mb-8" />}
               <div className="mb-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-1">
-                  {grade}
+                  {grade.charAt(0) + grade.slice(1).toLowerCase()}
+                </h2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+                {classrooms.map((classroom) => (
+                  <ClassroomCard
+                    key={classroom.id}
+                    cardId={classroom.id.toString()}
+                    grade={classroom.grade}
+                    name={classroom.name}
+                    studentCount={classroom.studentCount}
+                    classCode={classroom.classCode}
+                    hasCoTeacher={classroom.hasCoTeacher}
+                    isCoTeacher={classroom.isCoTeacher}
+                    ssoProvider={classroom.ssoProvider}
+                    schoolYear={classroom.schoolYear}
+                    openMenuId={openMenuId}
+                    onMenuToggle={handleMenuToggle}
+                    onEditClass={handleEditClass}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : sortBy === "Platform" && groupedByPlatform ? (
+        <div className="space-y-8">
+          {groupedByPlatform.map(({ platform, classrooms }, groupIndex) => (
+            <div key={platform}>
+              {groupIndex > 0 && <div className="border-t border-gray-200 mb-8" />}
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-1">
+                  {platform}
                 </h2>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">

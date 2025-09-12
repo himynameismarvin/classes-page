@@ -105,7 +105,7 @@ export default function ClassroomCard({
             {grade}
           </div>
           <div className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium">
-            {schoolYear}
+            SY {schoolYear}
           </div>
           {ssoProvider && (
             <div 
