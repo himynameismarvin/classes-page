@@ -218,6 +218,8 @@ export default function MainContent() {
                     classCode={classroom.classCode}
                     hasCoTeacher={classroom.hasCoTeacher}
                     isCoTeacher={classroom.isCoTeacher}
+                    primaryTeacher={classroom.primaryTeacher}
+                    primaryTeacherEmail={classroom.primaryTeacherEmail}
                     ssoProvider={classroom.ssoProvider}
                     schoolYear={classroom.schoolYear}
                     isCleverDistrictSync={classroom.isCleverDistrictSync}
@@ -251,6 +253,8 @@ export default function MainContent() {
                     classCode={classroom.classCode}
                     hasCoTeacher={classroom.hasCoTeacher}
                     isCoTeacher={classroom.isCoTeacher}
+                    primaryTeacher={classroom.primaryTeacher}
+                    primaryTeacherEmail={classroom.primaryTeacherEmail}
                     ssoProvider={classroom.ssoProvider}
                     schoolYear={classroom.schoolYear}
                     isCleverDistrictSync={classroom.isCleverDistrictSync}
@@ -284,6 +288,8 @@ export default function MainContent() {
                     classCode={classroom.classCode}
                     hasCoTeacher={classroom.hasCoTeacher}
                     isCoTeacher={classroom.isCoTeacher}
+                    primaryTeacher={classroom.primaryTeacher}
+                    primaryTeacherEmail={classroom.primaryTeacherEmail}
                     ssoProvider={classroom.ssoProvider}
                     schoolYear={classroom.schoolYear}
                     isCleverDistrictSync={classroom.isCleverDistrictSync}
@@ -308,6 +314,7 @@ export default function MainContent() {
               classCode={classroom.classCode}
               hasCoTeacher={classroom.hasCoTeacher}
               isCoTeacher={classroom.isCoTeacher}
+              primaryTeacher={classroom.primaryTeacher}
               ssoProvider={classroom.ssoProvider}
               schoolYear={classroom.schoolYear}
               openMenuId={openMenuId}

@@ -13,6 +13,8 @@ interface ClassroomCardProps {
   classCode: string;
   hasCoTeacher?: boolean;
   isCoTeacher?: boolean;
+  primaryTeacher?: string;
+  primaryTeacherEmail?: string;
   openMenuId?: string | null;
   onMenuToggle?: (cardId: string) => void;
   onEditClass?: (cardId: string) => void;
@@ -29,6 +31,8 @@ export default function ClassroomCard({
   classCode,
   hasCoTeacher = false,
   isCoTeacher = false,
+  primaryTeacher,
+  primaryTeacherEmail,
   openMenuId = null,
   onMenuToggle,
   onEditClass,
@@ -53,13 +57,30 @@ export default function ClassroomCard({
   const [ssoTooltipPosition, setSsoTooltipPosition] = useState({ x: 0, y: 0 });
   const [linkTooltipPosition, setLinkTooltipPosition] = useState({ x: 0, y: 0 });
 
-  const [coTeachers, setCoTeachers] = useState([
-    {
-      id: '1',
-      name: 'Alex Chen',
-      email: 'alex.chen@school.edu'
-    }
-  ]);
+  // Initialize co-teachers based on class name
+  const initialCoTeachers = name === "Period 2 - MATH - NILSSON"
+    ? [
+      // Only Maya Rodriguez for Period 2 Math class (removed Alex Chen)
+      {
+        id: '2',
+        name: 'Maya Rodriguez',
+        email: 'maya.rodriguez@school.edu'
+      }
+    ]
+    : [
+      {
+        id: '1',
+        name: 'Alex Chen',
+        email: 'alex.chen@school.edu'
+      },
+      {
+        id: '2',
+        name: 'Maya Rodriguez',
+        email: 'maya.rodriguez@school.edu'
+      }
+    ];
+
+  const [coTeachers, setCoTeachers] = useState(initialCoTeachers);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -216,17 +237,6 @@ export default function ClassroomCard({
             <span>{studentCount} students</span>
           )}
         </span>
-        {hasCoTeacher && (
-          <>
-            <FontAwesomeIcon icon={faUserTie} className="w-5 h-5 text-gray-600 ml-4 mr-1" />
-            <button
-              onClick={() => setShowCoTeacherModal(true)}
-              className="text-gray-600 underline hover:text-gray-800 transition-colors"
-            >
-              {coTeachers.length} co-teacher{coTeachers.length !== 1 ? 's' : ''}
-            </button>
-          </>
-        )}
       </div>
 
         {/* Enter Class Button */}
@@ -236,10 +246,13 @@ export default function ClassroomCard({
       </div>
 
       {/* Co-teacher Indicator */}
-      {isCoTeacher && (
-        <div className="bg-gray-100 px-4 py-2 flex items-center justify-center space-x-2 text-gray-600 -mt-2 relative rounded-b-lg">
+      {isCoTeacher ? (
+        <div
+          className="bg-white px-4 py-2 flex items-center justify-center space-x-2 text-gray-600 -mt-2 relative rounded-b-lg cursor-pointer hover:bg-gray-50 border-t border-gray-200"
+          onClick={() => setShowCoTeacherModal(true)}
+        >
           <span className="text-sm">You are a co-teacher</span>
-          <div 
+          <div
             ref={infoIconRef}
             className="relative"
             onMouseEnter={handleTooltipShow}
@@ -247,6 +260,14 @@ export default function ClassroomCard({
           >
             <FontAwesomeIcon icon={faInfoCircle} className="w-4 h-4 text-gray-400 cursor-help" />
           </div>
+        </div>
+      ) : hasCoTeacher && (
+        <div
+          className="bg-white px-4 py-2 flex items-center justify-center space-x-2 text-gray-600 -mt-2 relative rounded-b-lg cursor-pointer hover:bg-gray-50 border-t border-gray-200"
+          onClick={() => setShowCoTeacherModal(true)}
+        >
+          <FontAwesomeIcon icon={faUserTie} className="w-5 h-5 text-gray-600" />
+          <span className="text-sm">{coTeachers.length} co-teacher{coTeachers.length !== 1 ? 's' : ''}</span>
         </div>
       )}
       
@@ -359,6 +380,9 @@ export default function ClassroomCard({
         coTeachers={coTeachers}
         onAddCoTeacher={handleAddCoTeacher}
         onRemoveCoTeacher={handleRemoveCoTeacher}
+        isCoTeacher={isCoTeacher}
+        primaryTeacher={primaryTeacher}
+        primaryTeacherEmail={primaryTeacherEmail}
       />
     </div>
   );

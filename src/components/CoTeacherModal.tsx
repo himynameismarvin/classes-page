@@ -16,6 +16,9 @@ interface CoTeacherModalProps {
   coTeachers: CoTeacher[];
   onAddCoTeacher: (name: string, email: string) => void;
   onRemoveCoTeacher: (id: string) => void;
+  isCoTeacher?: boolean;
+  primaryTeacher?: string;
+  primaryTeacherEmail?: string;
 }
 
 export default function CoTeacherModal({
@@ -24,8 +27,19 @@ export default function CoTeacherModal({
   className,
   coTeachers,
   onAddCoTeacher,
-  onRemoveCoTeacher
+  onRemoveCoTeacher,
+  isCoTeacher = false,
+  primaryTeacher,
+  primaryTeacherEmail
 }: CoTeacherModalProps) {
+  // When user is a co-teacher, we'll show other co-teachers and the user separately
+  // This ensures we respect the 2 co-teacher limit
+  const otherCoTeachers = isCoTeacher ? coTeachers : coTeachers;
+  const currentUser = {
+    id: 'current-user',
+    name: 'Elizabeth Nilsson',
+    email: 'e.nilsson@prodigy.edu'
+  };
   const [isAddingCoTeacher, setIsAddingCoTeacher] = useState(false);
   const [newCoTeacherName, setNewCoTeacherName] = useState('');
   const [newCoTeacherEmail, setNewCoTeacherEmail] = useState('');
@@ -41,7 +55,7 @@ export default function CoTeacherModal({
     }
   };
 
-  const canAddMoreCoTeachers = coTeachers.length < 2;
+  const canAddMoreCoTeachers = true; // No limit on co-teachers
 
   return createPortal(
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -49,7 +63,7 @@ export default function CoTeacherModal({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">
-            Manage co-teachers in {className}
+            {isCoTeacher ? 'Co-teachers in ' : 'Manage co-teachers in '}{className}
           </h2>
           <button
             onClick={onClose}
@@ -61,16 +75,57 @@ export default function CoTeacherModal({
 
         {/* Body */}
         <div className="p-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            You have {coTeachers.length} co-teacher{coTeachers.length !== 1 ? 's' : ''}
-          </h3>
-
-          <p className="text-gray-600 mb-6">
-            Plan and organize your class instruction with your co-teachers. Co-teachers have the same class permissions as you. They can set up assignments, view reports, and more. They don't have access to your account settings.
-          </p>
+          {isCoTeacher ? (
+            <>
+              {primaryTeacher && (
+                <div className="flex items-center mb-6 bg-blue-50 p-4 rounded-lg">
+                  <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-blue-700 font-medium text-sm">
+                      {primaryTeacher.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">Primary Teacher</div>
+                    <div className="text-sm text-gray-600">{primaryTeacher}</div>
+                    {primaryTeacherEmail && (
+                      <div className="text-sm text-gray-600">{primaryTeacherEmail}</div>
+                    )}
+                  </div>
+                </div>
+              )}
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                Co-teachers
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Co-teachers have the same control over content but cannot delete classrooms or manage co-teachers.
+              </p>
+            </>
+          ) : (
+            <>
+              {primaryTeacher && (
+                <div className="flex items-center mb-6 bg-blue-50 p-4 rounded-lg">
+                  <div className="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-blue-700 font-medium text-sm">
+                      {primaryTeacher.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">Primary Teacher</div>
+                    <div className="text-sm text-gray-600">Elizabeth Nilsson <span className="text-gray-500 italic">(You)</span></div>
+                  </div>
+                </div>
+              )}
+              <h3 className="text-lg font-medium text-gray-900 mb-4">
+                You have {coTeachers.length} co-teacher{coTeachers.length !== 1 ? 's' : ''}
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Plan and organize your class instruction with your co-teachers. Co-teachers have the same class permissions as you. They can set up assignments, view reports, and more. They don't have access to your account settings.
+              </p>
+            </>
+          )}
 
           {/* Add Co-teacher Button */}
-          {canAddMoreCoTeachers && !isAddingCoTeacher && (
+          {!isCoTeacher && canAddMoreCoTeachers && !isAddingCoTeacher && (
             <button
               onClick={() => setIsAddingCoTeacher(true)}
               className="flex items-center space-x-2 bg-teal-700 hover:bg-teal-800 text-white px-4 py-2 rounded-lg transition-colors mb-6"
@@ -133,7 +188,28 @@ export default function CoTeacherModal({
 
           {/* Co-teacher List */}
           <div className="space-y-3">
-            {coTeachers.map((coTeacher) => (
+            {isCoTeacher && (
+              <div
+                key="current-user"
+                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                    <span className="text-gray-600 font-medium text-sm">
+                      {currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <div className="font-medium text-gray-900">
+                      {currentUser.name} <span className="text-gray-500 italic ml-1">(You)</span>
+                    </div>
+                    <div className="text-sm text-gray-600">{currentUser.email}</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {otherCoTeachers.map((coTeacher) => (
               <div
                 key={coTeacher.id}
                 className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
@@ -149,29 +225,24 @@ export default function CoTeacherModal({
                     <div className="text-sm text-gray-600">{coTeacher.email}</div>
                   </div>
                 </div>
-                <button
-                  onClick={() => onRemoveCoTeacher(coTeacher.id)}
-                  className="text-red-600 hover:text-red-700 px-3 py-1 border border-red-600 hover:border-red-700 rounded-lg transition-colors"
-                >
-                  Remove
-                </button>
+                {!isCoTeacher && (
+                  <button
+                    onClick={() => onRemoveCoTeacher(coTeacher.id)}
+                    className="text-red-600 hover:text-red-700 px-3 py-1 border border-red-600 hover:border-red-700 rounded-lg transition-colors"
+                  >
+                    Remove
+                  </button>
+                )}
               </div>
             ))}
           </div>
 
-          {coTeachers.length === 0 && (
+          {!isCoTeacher && coTeachers.length === 0 && (
             <div className="text-center py-8 text-gray-500">
               No co-teachers added yet
             </div>
           )}
 
-          {!canAddMoreCoTeachers && (
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-700">
-                Maximum of 2 co-teachers allowed per class.
-              </p>
-            </div>
-          )}
         </div>
       </div>
     </div>,

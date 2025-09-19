@@ -6,6 +6,8 @@ export interface Classroom {
   classCode: string;
   hasCoTeacher?: boolean;
   isCoTeacher?: boolean;
+  primaryTeacher?: string;
+  primaryTeacherEmail?: string;
   ssoProvider?: 'google' | 'clever';
   schoolYear: string;
   isCleverDistrictSync?: boolean;
@@ -20,6 +22,8 @@ export const classrooms: Classroom[] = [
     classCode: "X32QM9K",
     hasCoTeacher: false,
     isCoTeacher: false,
+    primaryTeacher: "Elizabeth Nilsson",
+    primaryTeacherEmail: "e.nilsson@prodigy.edu",
     ssoProvider: 'google',
     schoolYear: '2024-25'
   },
@@ -31,6 +35,8 @@ export const classrooms: Classroom[] = [
     classCode: "X32QM9K",
     hasCoTeacher: true,
     isCoTeacher: false,
+    primaryTeacher: "Elizabeth Nilsson",
+    primaryTeacherEmail: "e.nilsson@prodigy.edu",
     ssoProvider: 'clever',
     schoolYear: '2024-25',
     isCleverDistrictSync: true
@@ -43,6 +49,8 @@ export const classrooms: Classroom[] = [
     classCode: "X32QM9K",
     hasCoTeacher: false,
     isCoTeacher: true,
+    primaryTeacher: "John Appleseed",
+    primaryTeacherEmail: "john.appleseed@school.edu",
     schoolYear: '2023-24'
   },
   {
@@ -53,6 +61,8 @@ export const classrooms: Classroom[] = [
     classCode: "X32QM9K",
     hasCoTeacher: false,
     isCoTeacher: false,
+    primaryTeacher: "John Appleseed",
+    primaryTeacherEmail: "john.appleseed@school.edu",
     ssoProvider: 'google',
     schoolYear: '2023-24'
   },
@@ -64,6 +74,8 @@ export const classrooms: Classroom[] = [
     classCode: "X32QM9K",
     hasCoTeacher: true,
     isCoTeacher: false,
+    primaryTeacher: "Elizabeth Nilsson",
+    primaryTeacherEmail: "e.nilsson@prodigy.edu",
     ssoProvider: 'clever',
     schoolYear: '2024-25',
     isCleverDistrictSync: false
@@ -76,6 +88,8 @@ export const classrooms: Classroom[] = [
     classCode: "X32QM9K",
     hasCoTeacher: false,
     isCoTeacher: false,
+    primaryTeacher: "Elizabeth Nilsson",
+    primaryTeacherEmail: "e.nilsson@prodigy.edu",
     schoolYear: '2024-25'
   },
   {
@@ -86,6 +100,8 @@ export const classrooms: Classroom[] = [
     classCode: "H7K9P2L",
     hasCoTeacher: false,
     isCoTeacher: false,
+    primaryTeacher: "Elizabeth Nilsson",
+    primaryTeacherEmail: "e.nilsson@prodigy.edu",
     ssoProvider: 'google',
     schoolYear: '2025-26'
   },
@@ -97,6 +113,8 @@ export const classrooms: Classroom[] = [
     classCode: "M4N8Q5R",
     hasCoTeacher: true,
     isCoTeacher: false,
+    primaryTeacher: "Elizabeth Nilsson",
+    primaryTeacherEmail: "e.nilsson@prodigy.edu",
     ssoProvider: 'clever',
     schoolYear: '2025-26',
     isCleverDistrictSync: false
@@ -109,6 +127,8 @@ export const classrooms: Classroom[] = [
     classCode: "T9W3E6Y",
     hasCoTeacher: false,
     isCoTeacher: false,
+    primaryTeacher: "Elizabeth Nilsson",
+    primaryTeacherEmail: "e.nilsson@prodigy.edu",
     schoolYear: '2025-26'
   }
 ];
