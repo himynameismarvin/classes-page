@@ -8,13 +8,14 @@ export interface Classroom {
   isCoTeacher?: boolean;
   ssoProvider?: 'google' | 'clever';
   schoolYear: string;
+  isCleverDistrictSync?: boolean;
 }
 
 export const classrooms: Classroom[] = [
   {
     id: "1",
-    grade: "2ND GRADE",
-    name: "Homeroom (11A)",
+    grade: "4TH GRADE",
+    name: "Homeroom (11A) - NILSSON",
     studentCount: 11,
     classCode: "X32QM9K",
     hasCoTeacher: false,
@@ -24,19 +25,20 @@ export const classrooms: Classroom[] = [
   },
   {
     id: "2",
-    grade: "2ND GRADE", 
-    name: "Homeroom (11A)",
+    grade: "4TH GRADE",
+    name: "Homeroom (11A) - NILSSON",
     studentCount: 11,
     classCode: "X32QM9K",
     hasCoTeacher: true,
     isCoTeacher: false,
     ssoProvider: 'clever',
-    schoolYear: '2024-25'
+    schoolYear: '2024-25',
+    isCleverDistrictSync: true
   },
   {
     id: "3",
-    grade: "2ND GRADE",
-    name: "Period 2 - MATH - WHITEHURST",
+    grade: "3RD GRADE",
+    name: "Period 2 - MATH - NILSSON",
     studentCount: 0,
     classCode: "X32QM9K",
     hasCoTeacher: false,
@@ -46,7 +48,7 @@ export const classrooms: Classroom[] = [
   {
     id: "4",
     grade: "3RD GRADE",
-    name: "Period 2 - MATH - WHITEHURST", 
+    name: "Period 2 - MATH - NILSSON",
     studentCount: 0,
     classCode: "X32QM9K",
     hasCoTeacher: false,
@@ -56,23 +58,57 @@ export const classrooms: Classroom[] = [
   },
   {
     id: "5",
-    grade: "1ST GRADE",
-    name: "PERIOD 3 - MATH - WHITEHURST",
+    grade: "4TH GRADE",
+    name: "PERIOD 3 - MATH - NILSSON",
     studentCount: 11,
     classCode: "X32QM9K",
     hasCoTeacher: true,
     isCoTeacher: false,
     ssoProvider: 'clever',
-    schoolYear: '2024-25'
+    schoolYear: '2024-25',
+    isCleverDistrictSync: false
   },
   {
     id: "6",
-    grade: "2ND GRADE",
-    name: "PERIOD 3 - MATH - WHITEHURST",
+    grade: "4TH GRADE",
+    name: "PERIOD 3 - MATH - NILSSON",
     studentCount: 11,
     classCode: "X32QM9K",
     hasCoTeacher: false,
     isCoTeacher: false,
     schoolYear: '2024-25'
+  },
+  {
+    id: "7",
+    grade: "4TH GRADE",
+    name: "Advanced Math - NILSSON",
+    studentCount: 18,
+    classCode: "H7K9P2L",
+    hasCoTeacher: false,
+    isCoTeacher: false,
+    ssoProvider: 'google',
+    schoolYear: '2025-26'
+  },
+  {
+    id: "8",
+    grade: "4TH GRADE",
+    name: "Homeroom (11A) - NILSSON",
+    studentCount: 22,
+    classCode: "M4N8Q5R",
+    hasCoTeacher: true,
+    isCoTeacher: false,
+    ssoProvider: 'clever',
+    schoolYear: '2025-26',
+    isCleverDistrictSync: false
+  },
+  {
+    id: "9",
+    grade: "4TH GRADE",
+    name: "Geometry & Algebra - NILSSON",
+    studentCount: 16,
+    classCode: "T9W3E6Y",
+    hasCoTeacher: false,
+    isCoTeacher: false,
+    schoolYear: '2025-26'
   }
 ];

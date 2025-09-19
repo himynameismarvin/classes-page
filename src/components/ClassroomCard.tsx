@@ -1,9 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCog, faUserTie, faUserPlus, faUsers, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faUserTie, faUserPlus, faUsers, faInfoCircle, faLink } from '@fortawesome/free-solid-svg-icons';
 import { faEdit, faTrashCan, faEnvelope, faFolderOpen, faUser, faAddressCard } from '@fortawesome/free-regular-svg-icons';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { createPortal } from 'react-dom';
+import CoTeacherModal from './CoTeacherModal';
 
 interface ClassroomCardProps {
   grade: string;
@@ -18,13 +19,14 @@ interface ClassroomCardProps {
   cardId: string;
   ssoProvider?: 'google' | 'clever';
   schoolYear: string;
+  isCleverDistrictSync?: boolean;
 }
 
-export default function ClassroomCard({ 
-  grade, 
-  name, 
-  studentCount, 
-  classCode, 
+export default function ClassroomCard({
+  grade,
+  name,
+  studentCount,
+  classCode,
   hasCoTeacher = false,
   isCoTeacher = false,
   openMenuId = null,
@@ -32,19 +34,32 @@ export default function ClassroomCard({
   onEditClass,
   cardId,
   ssoProvider,
-  schoolYear
+  schoolYear,
+  isCleverDistrictSync = false
 }: ClassroomCardProps) {
   const menuRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const infoIconRef = useRef<HTMLDivElement>(null);
   const ssoIconRef = useRef<HTMLDivElement>(null);
+  const linkIconRef = useRef<HTMLDivElement>(null);
   const isMenuOpen = openMenuId === cardId;
   const [showTooltip, setShowTooltip] = useState(false);
   const [showSsoTooltip, setShowSsoTooltip] = useState(false);
+  const [showLinkTooltip, setShowLinkTooltip] = useState(false);
+  const [showCoTeacherModal, setShowCoTeacherModal] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [ssoTooltipPosition, setSsoTooltipPosition] = useState({ x: 0, y: 0 });
+  const [linkTooltipPosition, setLinkTooltipPosition] = useState({ x: 0, y: 0 });
+
+  const [coTeachers, setCoTeachers] = useState([
+    {
+      id: '1',
+      name: 'Alex Chen',
+      email: 'alex.chen@school.edu'
+    }
+  ]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -95,8 +110,32 @@ export default function ClassroomCard({
     setShowSsoTooltip(true);
   };
 
+  const handleLinkTooltipShow = () => {
+    if (linkIconRef.current) {
+      const rect = linkIconRef.current.getBoundingClientRect();
+      setLinkTooltipPosition({
+        x: rect.left + rect.width / 2,
+        y: rect.top - 8
+      });
+    }
+    setShowLinkTooltip(true);
+  };
+
+  const handleAddCoTeacher = (name: string, email: string) => {
+    const newCoTeacher = {
+      id: Date.now().toString(),
+      name,
+      email
+    };
+    setCoTeachers(prev => [...prev, newCoTeacher]);
+  };
+
+  const handleRemoveCoTeacher = (id: string) => {
+    setCoTeachers(prev => prev.filter(teacher => teacher.id !== id));
+  };
+
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow max-w-sm flex flex-col relative">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow max-w-sm min-w-[360px] flex flex-col relative">
       <div className="p-6 flex-1 overflow-hidden rounded-t-lg">
         {/* Header with grade, year, SSO icon and settings */}
         <div className="flex items-center justify-between mb-4">
@@ -108,28 +147,40 @@ export default function ClassroomCard({
             SY {schoolYear}
           </div>
           {ssoProvider && (
-            <div 
-              ref={ssoIconRef}
-              className="flex items-center justify-center w-6 h-6 rounded-sm cursor-help"
-              onMouseEnter={handleSsoTooltipShow}
-              onMouseLeave={() => setShowSsoTooltip(false)}
-            >
-              {ssoProvider === 'google' ? (
-                <Image
-                  src="/images/Google_Classroom_Logo.svg.png"
-                  alt="Google Classroom"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 rounded-sm"
-                />
-              ) : (
-                <Image
-                  src="/images/Mark-Blue copy.png"
-                  alt="Clever"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 rounded-sm"
-                />
+            <div className="flex items-center space-x-1">
+              <div
+                ref={ssoIconRef}
+                className="flex items-center justify-center w-6 h-6 rounded-sm cursor-help"
+                onMouseEnter={handleSsoTooltipShow}
+                onMouseLeave={() => setShowSsoTooltip(false)}
+              >
+                {ssoProvider === 'google' ? (
+                  <Image
+                    src="/images/Google_Classroom_Logo.svg.png"
+                    alt="Google Classroom"
+                    width={24}
+                    height={24}
+                    className="w-6 h-6 rounded-sm"
+                  />
+                ) : (
+                  <Image
+                    src="/images/Mark-Blue copy.png"
+                    alt="Clever"
+                    width={24}
+                    height={24}
+                    className="w-6 h-6 rounded-sm"
+                  />
+                )}
+              </div>
+              {ssoProvider === 'clever' && isCleverDistrictSync && (
+                <div
+                  ref={linkIconRef}
+                  className="flex items-center justify-center w-4 h-4 cursor-help"
+                  onMouseEnter={handleLinkTooltipShow}
+                  onMouseLeave={() => setShowLinkTooltip(false)}
+                >
+                  <FontAwesomeIcon icon={faLink} className="w-3 h-3 text-gray-600" />
+                </div>
               )}
             </div>
           )}
@@ -168,7 +219,12 @@ export default function ClassroomCard({
         {hasCoTeacher && (
           <>
             <FontAwesomeIcon icon={faUserTie} className="w-5 h-5 text-gray-600 ml-4 mr-1" />
-            <span className="text-gray-600">1 co-teacher</span>
+            <button
+              onClick={() => setShowCoTeacherModal(true)}
+              className="text-gray-600 underline hover:text-gray-800 transition-colors"
+            >
+              {coTeachers.length} co-teacher{coTeachers.length !== 1 ? 's' : ''}
+            </button>
           </>
         )}
       </div>
@@ -229,7 +285,10 @@ export default function ClassroomCard({
               <FontAwesomeIcon icon={faEnvelope} className="w-4 h-4" />
               <span>Invite parents</span>
             </button>
-            <button className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left">
+            <button
+              onClick={() => setShowCoTeacherModal(true)}
+              className="w-full flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-gray-50 text-left"
+            >
               <FontAwesomeIcon icon={faUser} className="w-4 h-4" />
               <span>Manage co-teachers</span>
             </button>
@@ -257,7 +316,7 @@ export default function ClassroomCard({
       
       {/* SSO Tooltip */}
       {showSsoTooltip && ssoProvider && typeof window !== 'undefined' && createPortal(
-        <div 
+        <div
           className="fixed px-3 py-2 bg-white text-gray-700 text-sm rounded-lg shadow-lg border border-gray-200 whitespace-nowrap z-50 transform -translate-x-1/2"
           style={{
             left: ssoTooltipPosition.x,
@@ -265,12 +324,42 @@ export default function ClassroomCard({
             transform: 'translateX(-50%) translateY(-100%)'
           }}
         >
-          This class was imported from {ssoProvider === 'google' ? 'Google Classroom' : 'Clever'}
+          {ssoProvider === 'clever' && isCleverDistrictSync
+            ? 'This class is managed by your school district'
+            : `This class was imported from ${ssoProvider === 'google' ? 'Google Classroom' : 'Clever'}`
+          }
           <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
           <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-200"></div>
         </div>,
         document.body
       )}
+
+      {/* Link Tooltip */}
+      {showLinkTooltip && typeof window !== 'undefined' && createPortal(
+        <div
+          className="fixed px-3 py-2 bg-white text-gray-700 text-sm rounded-lg shadow-lg border border-gray-200 whitespace-nowrap z-50 transform -translate-x-1/2"
+          style={{
+            left: linkTooltipPosition.x,
+            top: linkTooltipPosition.y,
+            transform: 'translateX(-50%) translateY(-100%)'
+          }}
+        >
+          This class is managed by your school district
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-white"></div>
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-px w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-200"></div>
+        </div>,
+        document.body
+      )}
+
+      {/* Co-teacher Modal */}
+      <CoTeacherModal
+        isOpen={showCoTeacherModal}
+        onClose={() => setShowCoTeacherModal(false)}
+        className={name}
+        coTeachers={coTeachers}
+        onAddCoTeacher={handleAddCoTeacher}
+        onRemoveCoTeacher={handleRemoveCoTeacher}
+      />
     </div>
   );
 }

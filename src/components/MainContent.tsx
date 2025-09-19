@@ -207,7 +207,7 @@ export default function MainContent() {
                   SY {schoolYear}
                 </h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+              <div className="grid grid-cols-1 min-[1064px]:grid-cols-2 min-[1448px]:grid-cols-3 gap-6 items-start">
                 {classrooms.map((classroom) => (
                   <ClassroomCard
                     key={classroom.id}
@@ -220,6 +220,7 @@ export default function MainContent() {
                     isCoTeacher={classroom.isCoTeacher}
                     ssoProvider={classroom.ssoProvider}
                     schoolYear={classroom.schoolYear}
+                    isCleverDistrictSync={classroom.isCleverDistrictSync}
                     openMenuId={openMenuId}
                     onMenuToggle={handleMenuToggle}
                     onEditClass={handleEditClass}
@@ -239,7 +240,7 @@ export default function MainContent() {
                   {grade.charAt(0) + grade.slice(1).toLowerCase()}
                 </h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+              <div className="grid grid-cols-1 min-[1064px]:grid-cols-2 min-[1448px]:grid-cols-3 gap-6 items-start">
                 {classrooms.map((classroom) => (
                   <ClassroomCard
                     key={classroom.id}
@@ -252,6 +253,7 @@ export default function MainContent() {
                     isCoTeacher={classroom.isCoTeacher}
                     ssoProvider={classroom.ssoProvider}
                     schoolYear={classroom.schoolYear}
+                    isCleverDistrictSync={classroom.isCleverDistrictSync}
                     openMenuId={openMenuId}
                     onMenuToggle={handleMenuToggle}
                     onEditClass={handleEditClass}
@@ -271,7 +273,7 @@ export default function MainContent() {
                   {platform}
                 </h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+              <div className="grid grid-cols-1 min-[1064px]:grid-cols-2 min-[1448px]:grid-cols-3 gap-6 items-start">
                 {classrooms.map((classroom) => (
                   <ClassroomCard
                     key={classroom.id}
@@ -284,6 +286,7 @@ export default function MainContent() {
                     isCoTeacher={classroom.isCoTeacher}
                     ssoProvider={classroom.ssoProvider}
                     schoolYear={classroom.schoolYear}
+                    isCleverDistrictSync={classroom.isCleverDistrictSync}
                     openMenuId={openMenuId}
                     onMenuToggle={handleMenuToggle}
                     onEditClass={handleEditClass}
@@ -294,7 +297,7 @@ export default function MainContent() {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+        <div className="grid grid-cols-1 min-[1064px]:grid-cols-2 min-[1448px]:grid-cols-3 gap-6 items-start">
           {sortedClassrooms.map((classroom) => (
             <ClassroomCard
               key={classroom.id}
