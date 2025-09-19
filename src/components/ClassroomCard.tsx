@@ -135,7 +135,7 @@ export default function ClassroomCard({
   };
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow max-w-sm min-w-[360px] flex flex-col relative">
+    <div className="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow w-full flex flex-col relative">
       <div className="p-6 flex-1 overflow-hidden rounded-t-lg">
         {/* Header with grade, year, SSO icon and settings */}
         <div className="flex items-center justify-between mb-4">
